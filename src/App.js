@@ -1,23 +1,24 @@
-import logo from './logo.svg';
 import './App.css';
-
+import React from 'react';
+/* global chrome */
 function App() {
+  const [text, setSelectedText] = React.useState('')
+  const [copyStatus, setCopyStatus] = React.useState('Copy')
+  chrome.tabs.executeScript({
+    code: "window.getSelection().toString();"
+  }, function (selection) {
+    console.log("selected");
+    setSelectedText(selection[0])
+  })
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h5>Selected Text</h5>
+      <div>
+        {text}
+      </div>
+      <div style={{ marginTop: "5px" }}>
+        <button onClick={() => { navigator.clipboard.writeText(text); setCopyStatus('Copied') }}>{copyStatus}</button>
+      </div>
     </div>
   );
 }
